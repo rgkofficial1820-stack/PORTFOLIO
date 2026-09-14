@@ -1,4 +1,6 @@
 import { Project, SkillGroup, EducationItem, CertificationItem, CreativeWork } from '../types';
+import rajPhoto from '../assets/images/raj_photo.jpg';
+import rajAvatar from '../assets/images/raj_avatar.jpg';
 
 export const personalInfo = {
   name: 'RAJ GOPI KALYAN M',
@@ -17,8 +19,8 @@ export const personalInfo = {
   instagramHandle: '@rgk_glary.18',
   github: 'https://github.com',
   creativeBrand: 'rgk_glary.18',
-  photoUrl: '/src/assets/images/raj_photo.jpg',
-  avatarUrl: '/src/assets/images/raj_avatar.jpg',
+  photoUrl: rajPhoto,
+  avatarUrl: rajAvatar,
   status: 'Open to B.Tech Internships, Projects & Collaborative Roles',
   bio: `I am an Information Technology undergraduate at Ramco Institute of Technology (2025–2029), passionate about engineering smart, efficient digital software and building engaging visual stories. With a strong foundation in Python, Flask, C, and responsive web design, I bridge technical software architecture with creative media and motion editing. I believe in consistency, self-learning, and hands-on execution.`,
   languages: [
