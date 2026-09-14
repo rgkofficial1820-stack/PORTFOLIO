@@ -17,28 +17,44 @@ const PhotoContext = createContext<PhotoContextType>({
   resetToDefault: () => {},
 });
 
+const safeGetItem = (key: string): string | null => {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+};
+
+const safeSetItem = (key: string, value: string): void => {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // ignore
+  }
+};
+
+const safeRemoveItem = (key: string): void => {
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    // ignore
+  }
+};
+
 export const PhotoProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [photoUrl, setPhotoUrl] = useState<string>(() => {
-    try {
-      const saved = localStorage.getItem('rgk_custom_photo');
-      if (saved && saved.length > 50) return saved;
-    } catch {
-      // ignore localstorage errors
-    }
+    const saved = safeGetItem('rgk_custom_photo');
+    if (saved && saved.length > 50) return saved;
     return personalInfo.photoUrl;
   });
 
   const [isCustomPhoto, setIsCustomPhoto] = useState<boolean>(() => {
-    try {
-      return !!localStorage.getItem('rgk_custom_photo');
-    } catch {
-      return false;
-    }
+    return !!safeGetItem('rgk_custom_photo');
   });
 
   useEffect(() => {
     // If no custom photo saved in localStorage, check if /raj.jpeg or /assets/raj.jpeg is available in public directory
-    if (!localStorage.getItem('rgk_custom_photo')) {
+    if (!safeGetItem('rgk_custom_photo')) {
       const testImg = new Image();
       testImg.src = '/raj.jpeg';
       testImg.onload = () => {
@@ -54,11 +70,7 @@ export const PhotoProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const setCustomPhoto = (url: string) => {
     setPhotoUrl(url);
     setIsCustomPhoto(true);
-    try {
-      localStorage.setItem('rgk_custom_photo', url);
-    } catch {
-      // ignore
-    }
+    safeSetItem('rgk_custom_photo', url);
   };
 
   const handleFileUpload = (file: File): Promise<boolean> => {
@@ -73,11 +85,7 @@ export const PhotoProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         if (result) {
           setPhotoUrl(result);
           setIsCustomPhoto(true);
-          try {
-            localStorage.setItem('rgk_custom_photo', result);
-          } catch {
-            // ignore quota exceeded if any
-          }
+          safeSetItem('rgk_custom_photo', result);
           resolve(true);
         } else {
           resolve(false);
@@ -89,11 +97,7 @@ export const PhotoProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const resetToDefault = () => {
-    try {
-      localStorage.removeItem('rgk_custom_photo');
-    } catch {
-      // ignore
-    }
+    safeRemoveItem('rgk_custom_photo');
     setPhotoUrl(personalInfo.photoUrl);
     setIsCustomPhoto(false);
   };
